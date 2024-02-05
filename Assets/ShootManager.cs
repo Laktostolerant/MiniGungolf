@@ -2,6 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
@@ -17,13 +18,10 @@ public class ShootManager : MonoBehaviour
     [SerializeField] GameObject gunLocation;
     [SerializeField] GameObject directionPointer;
     [SerializeField] MeshRenderer ballDirectionRenderer;
-    [SerializeField] CinemachineFreeLook camera;
 
     [SerializeField] GameObject[] allGunModels;
     [SerializeField] GunStats[] allGunScripts;
     [SerializeField] LayerMask groundMask;
-
-    Rigidbody rb;
 
     Vector3 gunOffset;
 
@@ -36,33 +34,32 @@ public class ShootManager : MonoBehaviour
     bool shootCooldown;
 
     bool isRespawning;
+    bool gunsIsVisible = true;
 
-    [SerializeField] GameObject tempWaterBuffer;
-    [SerializeField] GameObject bubbles;
+    [SerializeField] Ball ball;
+    GunManager guns;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-    }
+    bool isMyTurn;
+
+    private void Awake() { Instance = this; }
 
     void Start()
     {
-        rb = ballObject.GetComponent<Rigidbody>();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        guns = GetComponentInChildren<GunManager>();  
+        ball = GetComponentInChildren<Ball>();
+        ball.OnBallFinalDestination += BallRespawned;
+
         canShoot = true;
         shootStrength = allGunScripts[0].GunStrength;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.A)) SideScroller(true);
         if (Input.GetKey(KeyCode.D)) SideScroller(false);
-
-        if (Input.GetKey(KeyCode.W)) gunHeight += 0.01f;
-        if (Input.GetKey(KeyCode.S)) gunHeight -= 0.01f;
     }
 
     private void Update()
@@ -73,29 +70,11 @@ public class ShootManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E)) SwapWeapon(1);
             if (Input.GetKeyDown(KeyCode.O) && !shootCooldown) Shoot();
         }
-        else
-        {
-            if (rb.velocity.magnitude < 0.05f && !shootCooldown) Land();
-        }
 
-        if (!isRespawning)
-        {
-            if (ballObject.transform.position.y > 0)
-            {
-                gunHeight = Mathf.Clamp(gunHeight, ballObject.transform.position.y + 0.1f, ballObject.transform.position.y + 0.3f);
-            }
-            else
-            {
-                isRespawning = true;
-                StartCoroutine(RespawnBall());
-            }
-        }
+        gunLocation.transform.position = new Vector3(gunLocation.transform.position.x, ballObject.transform.position.y + allGunModels[currentGunIndex].GetComponent<GunProperties>().properties.GunHeight, gunLocation.transform.position.z);
 
-        AlterObjHeight(gunLocation);
-        AlterObjHeight(directionPointer);
+        //AlterObjHeight(gunLocation);
         GunDirection();
-
-        if (rb.velocity.magnitude < 0.01f) rb.velocity = Vector3.zero;
     }
 
     void Shoot()
@@ -103,30 +82,20 @@ public class ShootManager : MonoBehaviour
         previousPosition = ballObject.transform.position;
         SetRelativePosition();
 
-        MeshRenderer[] gunRenderers = allGunModels[currentGunIndex].GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer rend in gunRenderers)
-            rend.enabled = false;
-        ballDirectionRenderer.enabled = false;
+        ToggleGunVisibility();
 
+        ball.FireBall(directionPointer.transform.position - ballObject.transform.position, shootStrength);
 
-        rb.AddForce((directionPointer.transform.position - ballObject.transform.position) * shootStrength, ForceMode.Impulse);
         canShoot = false;
         StartCoroutine(ShootCooldown());
     }
 
     void Land()
     {
-        ballObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-
-        MeshRenderer[] gunRenderers = allGunModels[currentGunIndex].GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer rend in gunRenderers)
-            rend.enabled = true;
-        ballDirectionRenderer.enabled = true;
-
+        ToggleGunVisibility();
 
         canShoot = true;
         gunLocation.transform.position = ballObject.transform.position - gunOffset;
-        directionPointer.transform.position = ballObject.transform.position + gunOffset;
     }
 
     void SetRelativePosition()
@@ -139,33 +108,11 @@ public class ShootManager : MonoBehaviour
         int dir = left ? 1 : -1;
 
         gunLocation.transform.RotateAround(ballObject.transform.position, Vector3.up, dir * rotationSpeed * Time.deltaTime);
-        directionPointer.transform.RotateAround(ballObject.transform.position, Vector3.up, dir * rotationSpeed * Time.deltaTime);
-    }
-
-    void AlterObjHeight(GameObject obj)
-    {
-        obj.transform.position = new Vector3(obj.transform.position.x, gunHeight, obj.transform.position.z);
     }
 
     void GunDirection()
     {
-        Vector3 ballBottom = ballObject.transform.position;
-        ballBottom.y -= 0.1f;
-        gunLocation.transform.LookAt(ballBottom);
-    }
-
-    bool GroundChecker()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(ballObject.transform.position, Vector3.down, out hit, 0.01f, groundMask))
-        {
-            if (hit.transform.gameObject.layer == 6)
-                return true;
-            else
-                return false;
-        }
-
-        return false;
+        gunLocation.transform.LookAt(ballObject.transform.position);
     }
 
     IEnumerator ShootCooldown()
@@ -197,32 +144,22 @@ public class ShootManager : MonoBehaviour
         shootStrength = allGunScripts[index].GunStrength;
     }
 
-    IEnumerator RespawnBall()
+    void ToggleGunVisibility()
     {
-        bubbles.SetActive(true);
+        gunsIsVisible = !gunsIsVisible;
 
-        ballObject.transform.rotation = new Quaternion(0, 0, 0, 0);
-        Rigidbody rb = ballObject.GetComponent<Rigidbody>();
-        rb.angularVelocity = Vector3.zero;
-        rb.drag = 20;
-        rb.velocity = Vector3.down;
+        MeshRenderer[] gunRenderers = allGunModels[currentGunIndex].GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer rend in gunRenderers)
+            rend.enabled = gunsIsVisible;
+        ballDirectionRenderer.enabled = gunsIsVisible;
+    }
 
-        Vector3 waterSurfaceHit = new Vector3(ballObject.transform.position.x, 0, ballObject.transform.position.z);
+    void BallRespawned()
+    {
+        Debug.Log("ball is land lmao");
+        ToggleGunVisibility();
+        canShoot = true;
 
-        GameObject tempObject = Instantiate(tempWaterBuffer, waterSurfaceHit, Quaternion.identity);
-        camera.m_Follow = tempObject.transform;
-        camera.LookAt = tempObject.transform;
-
-        yield return new WaitForSeconds(3);
-        isRespawning = false;
-
-        bubbles.SetActive(false);
-
-        ballObject.transform.position = previousPosition;
-        camera.m_Follow = ballObject.transform;
-        camera.m_LookAt = ballObject.transform;
-        Destroy(tempObject);
-
-        rb.drag = 1;
+        gunLocation.transform.position = ballObject.transform.position - gunOffset;
     }
 }

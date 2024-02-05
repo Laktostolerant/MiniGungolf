@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Sniper
   m_EditorClassIdentifier: 
   gunStrength: 15
-  gunHeight: -0.085
+  gunHeight: 0.05
   gunSound: {fileID: 8300000, guid: 353e8fb0f41d8b743bc7eb679dd0afd8, type: 3}

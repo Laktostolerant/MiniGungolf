@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3829148289109030676}
+  - component: {fileID: 1172879117311198794}
   - component: {fileID: 4585241146477917691}
   - component: {fileID: 6497171142571606333}
   - component: {fileID: 2454376253014320741}
@@ -36,6 +37,22 @@ Transform:
   - {fileID: 7296802830765077282}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &1172879117311198794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4807074284369264648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e0eab1bc9acb14ebcd2c4d505a33fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentBallState: 0
+  cam: {fileID: 0}
+  tempWaterBuffer: {fileID: 0}
+  bubbles: {fileID: 0}
 --- !u!33 &4585241146477917691
 MeshFilter:
   m_ObjectHideFlags: 0

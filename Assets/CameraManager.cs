@@ -12,9 +12,9 @@ public class CameraManager : MonoBehaviour
         Cursor.visible = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        transform.position = new Vector3(ballPos.transform.position.x, 1, ballPos.transform.position.z);
-    }
+    //// Update is called once per frame
+    //void Update()
+    //{
+    //    transform.position = new Vector3(ballPos.transform.position.x, 1, ballPos.transform.position.z);
+    //}
 }
