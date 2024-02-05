@@ -1,16 +1,17 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BallManager : MonoBehaviour
+public class ShootManager : MonoBehaviour
 {
     Vector3 previousPosition;
     Transform camRespawningTarget;
 
-    public static BallManager Instance;
+    public static ShootManager Instance;
 
     [SerializeField] GameObject ballObject;
     [SerializeField] GameObject gunLocation;
