@@ -20,11 +20,12 @@ public class Ball : MonoBehaviour
     [SerializeField] GameObject bubbles;
 
     public delegate void BallEventHandler();
-    public event BallEventHandler OnBallFinalDestination;
+    public event BallEventHandler OnBallTurnOver = delegate { };
 
     // Start is called before the first frame update
     void Start()
     {
+        lastSafePosition = transform.position;
         rb = GetComponent<Rigidbody>();
     }
 
@@ -33,7 +34,6 @@ public class Ball : MonoBehaviour
         if (rb.velocity.magnitude < 0.01f)
         {
             rb.velocity = Vector3.zero;
-            //Land();
         }
     }
 
@@ -45,9 +45,8 @@ public class Ball : MonoBehaviour
     [ContextMenu("Land Ball")]
     void Land()
     {
-        OnBallFinalDestination();
+        OnBallTurnOver();
     }
-
 
 
     public void GoRespawnBall() { StartCoroutine(RespawnBall()); }
@@ -78,5 +77,16 @@ public class Ball : MonoBehaviour
         Destroy(tempObject);
 
         rb.drag = 1;
+
+        Land();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("OutOfBounds"))
+        {
+            Debug.Log("i hit water");
+            StartCoroutine(RespawnBall());
+        }
     }
 }

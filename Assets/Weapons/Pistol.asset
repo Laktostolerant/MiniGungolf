@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   gunStrength: 3
-  gunHeight: 0.2
+  gunHeight: -0.25
   gunSound: {fileID: 8300000, guid: 353e8fb0f41d8b743bc7eb679dd0afd8, type: 3}
