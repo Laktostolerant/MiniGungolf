@@ -6,8 +6,6 @@ using UnityEngine.Events;
 
 public class Ball : MonoBehaviour
 {
-    UnityEvent ballWasRespawned = new UnityEvent();
-
     public enum BallState { SHOOTABLE, NOT_SHOOTABLE };
     public BallState currentBallState;
 
@@ -37,8 +35,9 @@ public class Ball : MonoBehaviour
         }
     }
 
-    public void FireBall(Vector3 direction, int strength)
+    public void AddForceToBall(Vector3 direction, float strength, bool savePosition)
     {
+        if(savePosition) lastSafePosition = transform.position;
         rb.AddForce(direction * strength, ForceMode.Impulse);
     }
 
@@ -47,7 +46,6 @@ public class Ball : MonoBehaviour
     {
         OnBallTurnOver();
     }
-
 
     public void GoRespawnBall() { StartCoroutine(RespawnBall()); }
     IEnumerator RespawnBall()

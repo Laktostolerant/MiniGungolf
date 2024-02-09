@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class WeaponAbility : MonoBehaviour
 {
-    public virtual void ShootAbility()
+    public virtual void UseWeaponAbilities(GameObject myBall)
+    {
+        ShootAbility(myBall);
+        IdleAbility(myBall);
+    }
+
+    public virtual void ShootAbility(GameObject myBall)
     {
 
     }
 
-    public virtual void IdleAbility()
+    public virtual void IdleAbility(GameObject myBall)
     {
 
     }

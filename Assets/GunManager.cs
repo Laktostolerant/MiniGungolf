@@ -65,12 +65,12 @@ public class GunManager : MonoBehaviour
 
         foreach (GameObject gun in gunObjects)
         {
-            gun.SetActive(false);
+            ToggleGunMeshes(gun, false);
         }
 
         Debug.Log("new active gun: " +  activeGunIndex);
         currentGun = gunObjects[activeGunIndex];
-        currentGun.SetActive(true);
+        ToggleGunMeshes(currentGun, true);
         SetWeaponOffset();
     }
 
@@ -81,7 +81,6 @@ public class GunManager : MonoBehaviour
     
     void SetWeaponOffset()
     {
-        Debug.Log("gun offset lol " + gunOffset);
         transform.position = ballObject.transform.position - gunOffset;
         gunObjects[activeGunIndex].transform.position = transform.position + new Vector3(0, gunObjects[activeGunIndex].GetComponent<GunProperties>().properties.GunHeight, 0);
         gunPointer.transform.position = ballObject.transform.position + new Vector3(gunOffset.x, -gunOffset.y, gunOffset.z) + new Vector3(0, gunObjects[activeGunIndex].GetComponent<GunProperties>().properties.GunHeight, 0);
@@ -101,12 +100,13 @@ public class GunManager : MonoBehaviour
     public void GunWasShot()
     {
         isMyTurn = false;
-        currentGun.SetActive(false);
+        ToggleGunMeshes(currentGun, false);
+        WeaponAbility ability = currentGun.GetComponent<WeaponAbility>();
+        ability.UseWeaponAbilities(ballObject);
     }
 
     void BallTurnOver()
     {
-        currentGun.SetActive(true);
         SetWeaponOffset();
         isMyTurn = true;
     }
@@ -114,5 +114,13 @@ public class GunManager : MonoBehaviour
     public GunProperties GetActiveGunStats()
     {
         return gunObjects[activeGunIndex].GetComponent<GunProperties>();
+    }
+
+    void ToggleGunMeshes(GameObject weapon, bool setEnabled)
+    {
+        foreach(MeshRenderer mesh in weapon.GetComponentsInChildren<MeshRenderer>())
+        {
+            mesh.enabled = setEnabled;
+        }
     }
 }

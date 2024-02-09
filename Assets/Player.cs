@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
         gunManager.GunWasShot();
         shootStrength = gunManager.GetActiveGunStats().properties.GunStrength;
 
-        ball.FireBall(directionPointer.transform.position - ballObject.transform.position, shootStrength);
+        ball.AddForceToBall(directionPointer.transform.position - ballObject.transform.position, shootStrength, true);
 
         isMyTurn = false;
     }

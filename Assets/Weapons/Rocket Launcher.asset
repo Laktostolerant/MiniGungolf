@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Rocket Launcher
   m_EditorClassIdentifier: 
   gunStrength: 10
-  gunHeight: 0.25
+  gunHeight: 0.1
   gunSound: {fileID: 8300000, guid: 353e8fb0f41d8b743bc7eb679dd0afd8, type: 3}

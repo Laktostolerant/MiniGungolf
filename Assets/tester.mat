@@ -99,7 +99,7 @@ Material:
     - _FoamTextureSpeedY: 0
     - _FoamThreshold: 0
     - _FogThreshold: 0
-    - _FresnelIntensity: 0.001
+    - _FresnelIntensity: 0.25
     - _FresnelPower: 1
     - _Glossiness: 0.5
     - _IntersectionThreshold: 0
@@ -117,8 +117,8 @@ Material:
     - _ReflectionsScale: 4.8
     - _ReflectionsScrollSpeed: 0.05
     - _ShallowColorDepth: 1.28
-    - _WaveAmplitude: 0.0015
-    - _WaveIntensity: 0.0015
+    - _WaveAmplitude: 1
+    - _WaveIntensity: 0.15
     - _WaveSpeed: 1
     - _Waves: 1
     - _WindJitter: 0.1
