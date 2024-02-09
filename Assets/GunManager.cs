@@ -17,8 +17,17 @@ public class GunManager : MonoBehaviour
 
     GameObject currentGun;
 
+    bool isMyTurn = true;
+
+    private void Start()
+    {
+        currentGun = gunObjects[0];
+    }
+
     void FixedUpdate()
     {
+        if (!isMyTurn) return;
+
         if (Input.GetKey(KeyCode.A)) RotateGunToTheSide(true);
         if (Input.GetKey(KeyCode.D)) RotateGunToTheSide(false);
 
@@ -26,6 +35,8 @@ public class GunManager : MonoBehaviour
 
     void Update()
     {
+        if (!isMyTurn) return;
+
         GunDirection();
 
         if (Input.GetKeyDown(KeyCode.Q)) ChangeActiveGun(-1);
@@ -37,10 +48,13 @@ public class GunManager : MonoBehaviour
         ballObject = myBall;
         ball = ballObject.GetComponent<Ball>();
         ball.OnBallTurnOver += BallTurnOver;
+        SaveGunRelativePosition();
     }
 
     public void ChangeActiveGun(int change)
     {
+        SaveGunRelativePosition();
+
         activeGunIndex += change;
 
         if (activeGunIndex > gunObjects.Length - 1)
@@ -57,13 +71,20 @@ public class GunManager : MonoBehaviour
         Debug.Log("new active gun: " +  activeGunIndex);
         currentGun = gunObjects[activeGunIndex];
         currentGun.SetActive(true);
-
-        SaveGunRelativePosition();
+        SetWeaponOffset();
     }
 
     public void SaveGunRelativePosition()
     {
-        gunOffset = ballObject.transform.position - gunObjects[activeGunIndex].transform.position;
+        gunOffset = ballObject.transform.position - transform.position;
+    }
+    
+    void SetWeaponOffset()
+    {
+        Debug.Log("gun offset lol " + gunOffset);
+        transform.position = ballObject.transform.position - gunOffset;
+        gunObjects[activeGunIndex].transform.position = transform.position + new Vector3(0, gunObjects[activeGunIndex].GetComponent<GunProperties>().properties.GunHeight, 0);
+        gunPointer.transform.position = ballObject.transform.position + new Vector3(gunOffset.x, -gunOffset.y, gunOffset.z) + new Vector3(0, gunObjects[activeGunIndex].GetComponent<GunProperties>().properties.GunHeight, 0);
     }
 
     void RotateGunToTheSide(bool left)
@@ -79,11 +100,19 @@ public class GunManager : MonoBehaviour
 
     public void GunWasShot()
     {
+        isMyTurn = false;
         currentGun.SetActive(false);
     }
 
     void BallTurnOver()
     {
+        currentGun.SetActive(true);
+        SetWeaponOffset();
+        isMyTurn = true;
+    }
 
+    public GunProperties GetActiveGunStats()
+    {
+        return gunObjects[activeGunIndex].GetComponent<GunProperties>();
     }
 }

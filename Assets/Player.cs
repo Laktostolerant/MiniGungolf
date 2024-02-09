@@ -12,15 +12,8 @@ public class Player : MonoBehaviour
     public static Player Instance;
 
     [SerializeField] GameObject ballObject;
-    [SerializeField] GameObject gunLocation;
     [SerializeField] GameObject directionPointer;
-    [SerializeField] MeshRenderer ballDirectionRenderer;
 
-    [SerializeField] GameObject[] allGunModels;
-    [SerializeField] GunStats[] allGunScripts;
-    [SerializeField] LayerMask groundMask;
-
-    int currentGunIndex;
     int shootStrength;
     public float gunHeight;
 
@@ -47,7 +40,7 @@ public class Player : MonoBehaviour
         ball.OnBallTurnOver += SetShootable;
 
         isMyTurn = true;
-        shootStrength = allGunScripts[0].GunStrength;
+        shootStrength = gunManager.GetActiveGunStats().properties.GunStrength;
     }
 
     private void Update()
@@ -62,6 +55,7 @@ public class Player : MonoBehaviour
     {
         gunManager.SaveGunRelativePosition();
         gunManager.GunWasShot();
+        shootStrength = gunManager.GetActiveGunStats().properties.GunStrength;
 
         ball.FireBall(directionPointer.transform.position - ballObject.transform.position, shootStrength);
 

@@ -19,7 +19,7 @@ MonoBehaviour:
     - goDatas_byGlobalId:
         keys:
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-330585543-0
-        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1501776566-0
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1051476796-0
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1246882164-0
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-2951928818362069568-0
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-446571134-0
@@ -29,16 +29,17 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-832575517-0
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-410087039-0
         - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-4807074284369264648-7916212767870047970
+        - globalObjectIdString: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1805048499-0
         values:
         - colorIndex: 0
           iconNameOrGuid: Camera Icon
-        - colorIndex: 0
-          iconNameOrGuid: Camera Icon
+        - colorIndex: 9
+          iconNameOrGuid: 
         - colorIndex: 0
           iconNameOrGuid: Camera Icon
         - colorIndex: 8
           iconNameOrGuid: AvatarMask On Icon
-        - colorIndex: 2
+        - colorIndex: 8
           iconNameOrGuid: Settings Icon
         - colorIndex: 0
           iconNameOrGuid: Folder Icon
@@ -52,3 +53,5 @@ MonoBehaviour:
           iconNameOrGuid: DirectionalLight Icon
         - colorIndex: 0
           iconNameOrGuid: Terrain Icon
+        - colorIndex: 7
+          iconNameOrGuid: Favorite
