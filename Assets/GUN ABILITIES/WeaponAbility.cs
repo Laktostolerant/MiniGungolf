@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class WeaponAbility : MonoBehaviour
 {
-    public virtual void UseWeaponAbilities(GameObject myBall)
+    bool isActiveWeapon;
+
+    public virtual void OnWeaponSelect()
     {
-        ShootAbility(myBall);
-        IdleAbility(myBall);
+        isActiveWeapon = true;
+    }
+
+    public virtual void OnWeaponDeselect()
+    {
+        isActiveWeapon = false;
     }
 
     public virtual void ShootAbility(GameObject myBall)
     {
-
+        Ball ball = myBall.GetComponent<Ball>();
+        ball.BallWasShot();
     }
 
     public virtual void IdleAbility(GameObject myBall)

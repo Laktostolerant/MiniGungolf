@@ -6,22 +6,29 @@ public class Minigun_Ability : WeaponAbility
 {
     public override void ShootAbility(GameObject myBall)
     {
-
+        StartCoroutine(RapidFire(myBall));
     }
 
     public override void IdleAbility(GameObject myBall)
     {
-        StartCoroutine(RapidFire(myBall));
+
     }
 
     IEnumerator RapidFire(GameObject myBall)
     {
         Ball ball = myBall.GetComponent<Ball>();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 30; i++)
         {
-            ball.AddForceToBall(Vector3.left, 0.1f, false);
-            yield return new WaitForSeconds(0.01f);
+            ball.AddForceToBall(Player.Instance.GetGunDirection(true), 0.5f, false);
+            yield return new WaitForSeconds(0.1f);
         }
+
+        ball.BallWasShot();
+
+        while (ball.GetBallRigidbody().velocity.magnitude > 0)
+            yield return null;
+
+        ball.GoNextPlayer();
     }
 }

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0db5081542065a4fba2ba1f6c883c5a, type: 3}
   m_Name: Sniper
   m_EditorClassIdentifier: 
-  gunStrength: 15
+  gunStrength: 10
   gunHeight: -0.3
   gunSound: {fileID: 8300000, guid: 353e8fb0f41d8b743bc7eb679dd0afd8, type: 3}

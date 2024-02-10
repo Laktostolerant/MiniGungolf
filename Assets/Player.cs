@@ -18,10 +18,6 @@ public class Player : MonoBehaviour
     public float gunHeight;
 
     bool isMyTurn;
-    bool shootCooldown;
-
-    bool isRespawning;
-    bool gunsIsVisible = true;
 
     [SerializeField] Ball ball;
     GunManager gunManager;
@@ -34,10 +30,10 @@ public class Player : MonoBehaviour
         Cursor.visible = false;
 
         gunManager = GetComponentInChildren<GunManager>();
-        gunManager.GetBallObject(ballObject);
+        gunManager.ConnectBallToPlayer(ballObject);
 
         ball = GetComponentInChildren<Ball>();
-        ball.OnBallTurnOver += SetShootable;
+        ball.OnBallFinalPosition += PlayerBallFinalDestination;
 
         isMyTurn = true;
         shootStrength = gunManager.GetActiveGunStats().properties.GunStrength;
@@ -45,7 +41,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (isMyTurn && Input.GetKeyDown(KeyCode.O) && !shootCooldown)
+        if (isMyTurn && Input.GetKeyDown(KeyCode.O))
         {
             Shoot();
         }
@@ -54,17 +50,34 @@ public class Player : MonoBehaviour
     void Shoot()
     {
         gunManager.SaveGunRelativePosition();
-        gunManager.GunWasShot();
+        gunManager.FireGun();
         shootStrength = gunManager.GetActiveGunStats().properties.GunStrength;
-
-        ball.AddForceToBall(directionPointer.transform.position - ballObject.transform.position, shootStrength, true);
+        Debug.Log("shootstrength: " + shootStrength);
+        ball.AddForceToBall(GetGunDirection(), shootStrength, true);
 
         isMyTurn = false;
     }
 
-    void SetShootable()
+    void PlayerBallFinalDestination()
     {
+        Manageroo.Instance.NextPlayerTurn();
         Debug.Log("ball is land lmao");
+    }
+
+    [ContextMenu("Start My Turn")]
+    public void BecomePlayerTurn()
+    {
         isMyTurn = true;
+        gunManager.StartPlayerTurn();
+    }
+
+    public Vector3 GetGunDirection(bool flatten = false)
+    {
+        Vector3 dir = directionPointer.transform.position - ballObject.transform.position;
+        dir.Normalize();
+
+        if (flatten) dir.y = 0;
+
+        return dir;
     }
 }

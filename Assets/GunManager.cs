@@ -26,33 +26,38 @@ public class GunManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isMyTurn) return;
-
         if (Input.GetKey(KeyCode.A)) RotateGunToTheSide(true);
         if (Input.GetKey(KeyCode.D)) RotateGunToTheSide(false);
 
+        if (!isMyTurn) return;
+         
+        WeaponAbility ability = currentGun.GetComponent<WeaponAbility>();
+        ability.IdleAbility(ballObject);
     }
 
     void Update()
     {
-        if (!isMyTurn) return;
+        SetGunLookAtBall();
+        SetWeaponOffset();
 
-        GunDirection();
+        if (!isMyTurn) return;
 
         if (Input.GetKeyDown(KeyCode.Q)) ChangeActiveGun(-1);
         if (Input.GetKeyDown(KeyCode.E)) ChangeActiveGun(1);
     }
 
-    public void GetBallObject(GameObject myBall)
+    public void ConnectBallToPlayer(GameObject myBall)
     {
         ballObject = myBall;
         ball = ballObject.GetComponent<Ball>();
-        ball.OnBallTurnOver += BallTurnOver;
+        ball.OnPlayerShoot += FinishPlayerTurn;
         SaveGunRelativePosition();
     }
 
     public void ChangeActiveGun(int change)
     {
+        gunObjects[activeGunIndex].GetComponent<WeaponAbility>().OnWeaponDeselect();
+
         SaveGunRelativePosition();
 
         activeGunIndex += change;
@@ -65,20 +70,61 @@ public class GunManager : MonoBehaviour
 
         foreach (GameObject gun in gunObjects)
         {
-            ToggleGunMeshes(gun, false);
+            ToggleGunMeshVisibility(gun, false);
         }
 
-        Debug.Log("new active gun: " +  activeGunIndex);
         currentGun = gunObjects[activeGunIndex];
-        ToggleGunMeshes(currentGun, true);
-        SetWeaponOffset();
+        ToggleGunMeshVisibility(currentGun, true);
+
+        gunObjects[activeGunIndex].GetComponent<WeaponAbility>().OnWeaponSelect();
+    }
+
+    public void FireGun()
+    {
+        WeaponAbility ability = currentGun.GetComponent<WeaponAbility>();
+        Debug.Log("using ability lol");
+        isMyTurn = false;
+        ability.ShootAbility(ballObject);
+    }
+
+    void FinishPlayerTurn()
+    {
+        Debug.Log("disablin meshes");
+        ToggleGunMeshVisibility(currentGun, false);
+    }
+
+    public void StartPlayerTurn()
+    {
+        Debug.Log("is my turn again lmao ");
+        isMyTurn = true;
+        ToggleGunMeshVisibility(currentGun, true);
+    }
+
+    public GunProperties GetActiveGunStats()
+    {
+        return gunObjects[activeGunIndex].GetComponent<GunProperties>();
+    }
+
+    public void ToggleGunMeshVisibility(GameObject weapon, bool setEnabled)
+    {
+        foreach(MeshRenderer mesh in weapon.GetComponentsInChildren<MeshRenderer>())
+        {
+            mesh.enabled = setEnabled;
+        }
+
+        gunPointer.GetComponent<MeshRenderer>().enabled = setEnabled;
+    }
+
+    void SetGunLookAtBall()
+    {
+        gunObjects[activeGunIndex].transform.LookAt(ballObject.transform.position);
     }
 
     public void SaveGunRelativePosition()
     {
         gunOffset = ballObject.transform.position - transform.position;
     }
-    
+
     void SetWeaponOffset()
     {
         transform.position = ballObject.transform.position - gunOffset;
@@ -90,37 +136,6 @@ public class GunManager : MonoBehaviour
     {
         int dir = left ? 1 : -1;
         transform.RotateAround(ballObject.transform.position, Vector3.up, dir * rotationSpeed * Time.deltaTime);
-    }
-
-    void GunDirection()
-    {
-        gunObjects[activeGunIndex].transform.LookAt(ballObject.transform.position);
-    }
-
-    public void GunWasShot()
-    {
-        isMyTurn = false;
-        ToggleGunMeshes(currentGun, false);
-        WeaponAbility ability = currentGun.GetComponent<WeaponAbility>();
-        ability.UseWeaponAbilities(ballObject);
-    }
-
-    void BallTurnOver()
-    {
-        SetWeaponOffset();
-        isMyTurn = true;
-    }
-
-    public GunProperties GetActiveGunStats()
-    {
-        return gunObjects[activeGunIndex].GetComponent<GunProperties>();
-    }
-
-    void ToggleGunMeshes(GameObject weapon, bool setEnabled)
-    {
-        foreach(MeshRenderer mesh in weapon.GetComponentsInChildren<MeshRenderer>())
-        {
-            mesh.enabled = setEnabled;
-        }
+        SaveGunRelativePosition();
     }
 }

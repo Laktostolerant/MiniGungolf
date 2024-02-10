@@ -18,7 +18,8 @@ public class Ball : MonoBehaviour
     [SerializeField] GameObject bubbles;
 
     public delegate void BallEventHandler();
-    public event BallEventHandler OnBallTurnOver = delegate { };
+    public event BallEventHandler OnPlayerShoot = delegate { };
+    public event BallEventHandler OnBallFinalPosition = delegate { };
 
     // Start is called before the first frame update
     void Start()
@@ -41,10 +42,15 @@ public class Ball : MonoBehaviour
         rb.AddForce(direction * strength, ForceMode.Impulse);
     }
 
-    [ContextMenu("Land Ball")]
-    void Land()
+    public void BallWasShot()
     {
-        OnBallTurnOver();
+        OnPlayerShoot();
+    }
+
+    [ContextMenu("Finish My Turn")]
+    public void GoNextPlayer()
+    {
+        OnBallFinalPosition();
     }
 
     public void GoRespawnBall() { StartCoroutine(RespawnBall()); }
@@ -76,7 +82,7 @@ public class Ball : MonoBehaviour
 
         rb.drag = 1;
 
-        Land();
+        GoNextPlayer();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -86,5 +92,10 @@ public class Ball : MonoBehaviour
             Debug.Log("i hit water");
             StartCoroutine(RespawnBall());
         }
+    }
+
+    public Rigidbody GetBallRigidbody()
+    {
+        return rb;
     }
 }
