@@ -7,6 +7,8 @@ public class Sniper_Ability : WeaponAbility
     [SerializeField] LineRenderer lineRenderer;
     RaycastHit hit;
 
+    bool isActiveWeapon;
+
     private void Start()
     {
         lineRenderer = GetComponentInChildren<LineRenderer>();
@@ -14,6 +16,7 @@ public class Sniper_Ability : WeaponAbility
 
     public override void OnWeaponDeselect()
     {
+        isActiveWeapon = false;
         lineRenderer.positionCount = 0;
     }
 
