@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class WeaponAbility : MonoBehaviour
 {
-    bool isActiveWeapon;
+    public bool isActiveWeapon;
+
+    public Ball myBall;
+
+    public virtual void ConnectToMyBall(Ball ball)
+    {
+        myBall = ball;
+        myBall.OnBallCollision += OnBallCollisionEnter;
+    }
 
     public virtual void OnWeaponSelect()
     {
@@ -25,5 +33,10 @@ public class WeaponAbility : MonoBehaviour
     public virtual void IdleAbility(GameObject myBall)
     {
 
+    }
+
+    public virtual void OnBallCollisionEnter(Collision collision)
+    {
+        if (!isActiveWeapon) return;
     }
 }

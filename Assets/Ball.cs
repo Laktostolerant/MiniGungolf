@@ -21,7 +21,9 @@ public class Ball : MonoBehaviour
     public event BallEventHandler OnPlayerShoot = delegate { };
     public event BallEventHandler OnBallFinalPosition = delegate { };
 
-    // Start is called before the first frame update
+    public delegate void BallCollisionEvents(Collision collision);
+    public event BallCollisionEvents OnBallCollision = delegate { };
+
     void Start()
     {
         lastSafePosition = transform.position;
@@ -97,5 +99,10 @@ public class Ball : MonoBehaviour
     public Rigidbody GetBallRigidbody()
     {
         return rb;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        OnBallCollision(collision);
     }
 }

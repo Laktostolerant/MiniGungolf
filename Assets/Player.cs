@@ -52,7 +52,6 @@ public class Player : MonoBehaviour
         gunManager.SaveGunRelativePosition();
         gunManager.FireGun();
         shootStrength = gunManager.GetActiveGunStats().properties.GunStrength;
-        Debug.Log("shootstrength: " + shootStrength);
         ball.AddForceToBall(GetGunDirection(), shootStrength, true);
 
         isMyTurn = false;
@@ -67,6 +66,7 @@ public class Player : MonoBehaviour
     [ContextMenu("Start My Turn")]
     public void BecomePlayerTurn()
     {
+        Debug.Log("my turn");
         isMyTurn = true;
         gunManager.StartPlayerTurn();
     }

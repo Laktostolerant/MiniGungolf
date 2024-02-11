@@ -7,21 +7,34 @@ public class Sniper_Ability : WeaponAbility
     [SerializeField] LineRenderer lineRenderer;
     RaycastHit hit;
 
-    bool isActiveWeapon;
+    int numberOfBounces;
 
     private void Start()
     {
         lineRenderer = GetComponentInChildren<LineRenderer>();
     }
 
+    private void FixedUpdate()
+    {
+        if (!isActiveWeapon) return;
+    }
+
+    public override void OnWeaponSelect()
+    {
+        isActiveWeapon = true;
+        numberOfBounces = 0;
+    }
+
     public override void OnWeaponDeselect()
     {
         isActiveWeapon = false;
         lineRenderer.positionCount = 0;
+        numberOfBounces = 0;
     }
 
     public override void ShootAbility(GameObject myBall)
     {
+        myBall.GetComponent<Ball>().BallWasShot();
         lineRenderer.positionCount = 0;
     }
 
@@ -36,13 +49,13 @@ public class Sniper_Ability : WeaponAbility
         Vector3 origin = myBall.transform.position;
         Vector3 direction = Player.Instance.GetGunDirection(true);
         List<Vector3> hitPoints = new List<Vector3>();
-        float remainingDistance = 3;
+        float remainingDistance = 2;
 
         hitPoints.Add(origin);
 
         while (remainingDistance > 0)
         {
-            if (hitPoints.Count > 3) break;
+            if (hitPoints.Count > 2) break;
 
             if (Physics.Raycast(origin, direction, out hit, remainingDistance, 1))
             {
@@ -60,40 +73,21 @@ public class Sniper_Ability : WeaponAbility
 
         lineRenderer.positionCount = hitPoints.Count;
 
-        for(int i = 0; i < lineRenderer.positionCount; i++)
+        for (int i = 0; i < lineRenderer.positionCount; i++)
         {
             lineRenderer.SetPosition(i, hitPoints[i]);
         }
     }
 
-    private void DrawReflectionPattern(Vector3 position, Vector3 direction, int reflectionsRemaining)
-    {
-        if (reflectionsRemaining == 0)
-        {
-            return;
-        }
+    //public override void OnBallCollisionEnter(Collision collision)
+    //{
+    //    if (!isActiveWeapon) return;
 
-        Vector3 startingPosition = position;
+    //    numberOfBounces++;
 
-        Ray ray = new Ray(position, direction);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 10))
-        {
-            direction = Vector3.Reflect(direction, hit.normal);
-            position = hit.point;
-        }
-        else
-        {
-            position += direction * 10;
-        }
+    //    Debug.Log("BOUNCAH");
 
-        //Gizmos.color = Color.yellow;
-        //Gizmos.DrawLine(startingPosition, position);
-
-        Debug.DrawLine(startingPosition, position, Color.blue);
-
-        DrawReflectionPattern(position, direction, reflectionsRemaining - 1);
-
-
-    }
+    //    if(numberOfBounces >= 2) myBall.GetBallRigidbody().velocity = Vector3.zero;
+    //    myBall.GoNextPlayer();
+    //}
 }

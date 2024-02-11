@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GunManager : MonoBehaviour
@@ -17,7 +15,7 @@ public class GunManager : MonoBehaviour
 
     GameObject currentGun;
 
-    bool isMyTurn = true;
+    [SerializeField] bool isMyTurn = true;
 
     private void Start()
     {
@@ -52,6 +50,11 @@ public class GunManager : MonoBehaviour
         ball = ballObject.GetComponent<Ball>();
         ball.OnPlayerShoot += FinishPlayerTurn;
         SaveGunRelativePosition();
+
+        foreach(GameObject gun in gunObjects)
+        {
+            gun.GetComponent<WeaponAbility>().ConnectToMyBall(ball);
+        }
     }
 
     public void ChangeActiveGun(int change)
@@ -82,22 +85,21 @@ public class GunManager : MonoBehaviour
     public void FireGun()
     {
         WeaponAbility ability = currentGun.GetComponent<WeaponAbility>();
-        Debug.Log("using ability lol");
         isMyTurn = false;
         ability.ShootAbility(ballObject);
     }
 
     void FinishPlayerTurn()
     {
-        Debug.Log("disablin meshes");
         ToggleGunMeshVisibility(currentGun, false);
+        currentGun.GetComponent<WeaponAbility>().OnWeaponDeselect();
     }
 
     public void StartPlayerTurn()
     {
-        Debug.Log("is my turn again lmao ");
         isMyTurn = true;
         ToggleGunMeshVisibility(currentGun, true);
+        currentGun.GetComponent<WeaponAbility>().OnWeaponSelect();
     }
 
     public GunProperties GetActiveGunStats()
