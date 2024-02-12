@@ -31,4 +31,20 @@ public class Manageroo : MonoBehaviour
         players[currentPlayerTurn].BecomePlayerTurn();
         Debug.Log("started da new player turn lmao");
     }
+
+
+
+    public void GetLobby()
+    {
+
+    }
+
+    [SerializeField] public GameRegions[] gameRegions;
+
+    [System.Serializable]
+    public struct GameRegions
+    {
+        [SerializeField] public string name;
+        [SerializeField] public List<GameObject> levels;
+    }
 }
