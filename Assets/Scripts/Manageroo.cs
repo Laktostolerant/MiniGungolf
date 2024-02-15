@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* 
+ * This one will take a while.
+ * It's the lobby & netcode manager.
+ * I got this one, ill add comments once it makes more sense.
+ */
+
 public class Manageroo : MonoBehaviour
 {
     public static Manageroo Instance;

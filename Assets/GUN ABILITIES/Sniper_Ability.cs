@@ -32,13 +32,13 @@ public class Sniper_Ability : WeaponAbility
         numberOfBounces = 0;
     }
 
-    public override void ShootAbility(GameObject myBall)
+    public override void ActiveGunAbility(GameObject myBall)
     {
         myBall.GetComponent<Ball>().BallWasShot();
         lineRenderer.positionCount = 0;
     }
 
-    public override void IdleAbility(GameObject myBall)
+    public override void PassiveGunAbility(GameObject myBall)
     {
         PredictShot(myBall);
     }

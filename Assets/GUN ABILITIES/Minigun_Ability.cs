@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Minigun_Ability : WeaponAbility
 {
-    public override void ShootAbility(GameObject myBall)
+    public override void ActiveGunAbility(GameObject myBall)
     {
         StartCoroutine(RapidFire(myBall));
     }
 
-    public override void IdleAbility(GameObject myBall)
+    public override void PassiveGunAbility(GameObject myBall)
     {
 
     }

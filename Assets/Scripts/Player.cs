@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     [SerializeField] Ball ball;
     GunManager gunManager;
 
-    private void Awake() { Instance = this; }
+    private void Awake() { Instance = this; } //THIS SHOULD NOT BE AN INSTANCE UNLESS IT'S MY PLAYER. OTHERWISE MAYBE THERE IS ANOTHER SOLUTION IDK
 
     void Start()
     {
@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    //Shoot the ball! Saves gun's relative position t othe ball.
     void Shoot()
     {
         gunManager.SaveGunRelativePosition();
@@ -57,12 +58,14 @@ public class Player : MonoBehaviour
         isMyTurn = false;
     }
 
+    //Tell game that i have finished my turn.
     void PlayerBallFinalDestination()
     {
         Manageroo.Instance.NextPlayerTurn();
         Debug.Log("ball is land lmao");
     }
 
+    //Tell player that it's their turn.
     [ContextMenu("Start My Turn")]
     public void BecomePlayerTurn()
     {
@@ -71,6 +74,8 @@ public class Player : MonoBehaviour
         gunManager.StartPlayerTurn();
     }
 
+    //Get whatever direction the gun is currently pointing in.
+    //Flatten means it ignores the Y value.
     public Vector3 GetGunDirection(bool flatten = false)
     {
         Vector3 dir = directionPointer.transform.position - ballObject.transform.position;
