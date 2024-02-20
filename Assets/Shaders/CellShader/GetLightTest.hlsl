@@ -36,16 +36,6 @@ float3 CalculateCelShading(Light l, SurfaceVariables s)
     return l.color * diffuse;
 }
 
-float AttenuationCalculation(Light l, SurfaceVariables s)
-{
-    float diffuse = saturate(dot(s.normal, l.direction));
-    float attenuation = l.distanceAttenuation * l.shadowAttenuation;
-    
-    diffuse *= attenuation;
-    
-    return diffuse;
-}
-
 #endif
 
 void LightingCelShaded_float(
@@ -54,8 +44,9 @@ void LightingCelShaded_float(
 {
 
 #if defined(SHADERGRAPH_PREVIEW)
-   Color = half3(0.5f, 0.5f, 0.5f);
+    Color = half3(0.5f, 0.5f, 0.5f);
     Attenuation = half(0.5f);
+    
 #else
     SurfaceVariables s;
     
@@ -71,20 +62,34 @@ void LightingCelShaded_float(
     float4 shadowCoord = TransformWorldToShadowCoord(Position);
 #endif
 
+    
+    
     Light light = GetMainLight(shadowCoord);
-    Color = CalculateCelShading(light, s);
-    Attenuation = AttenuationCalculation(light, s);
+    
+    float3 diff = dot(s.normal, light.direction);
+    
    
+    
+    Attenuation = light.distanceAttenuation * light.shadowAttenuation;
+    Attenuation *= diff;
+    Color = diff;
+   
+    
+    
+    
+    
+    /*
     
     int pixelLightCount = GetAdditionalLightsCount();
     for (int i = 0; i < pixelLightCount; i++)
     {
         light = GetAdditionalLight(i, Position, 1);
-        Color += CalculateCelShading(light, s);
-        Attenuation += AttenuationCalculation(light, s);
-        
 
-    }
+        Color += CalculateCelShading(light, s);
+   
+        
+        
+    }*/
    
 #endif
 }

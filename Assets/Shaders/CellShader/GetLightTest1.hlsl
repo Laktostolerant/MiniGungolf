@@ -54,8 +54,9 @@ void LightingCelShaded_float(
 {
 
 #if defined(SHADERGRAPH_PREVIEW)
-   Color = half3(0.5f, 0.5f, 0.5f);
+    Color = half3(0.5f, 0.5f, 0.5f);
     Attenuation = half(0.5f);
+   
 #else
     SurfaceVariables s;
     
@@ -73,7 +74,10 @@ void LightingCelShaded_float(
 
     Light light = GetMainLight(shadowCoord);
     Color = CalculateCelShading(light, s);
+    
     Attenuation = AttenuationCalculation(light, s);
+    float h = Attenuation * 0.5f + 0.5f;
+    DotValue = h;
    
     
     int pixelLightCount = GetAdditionalLightsCount();
@@ -81,8 +85,10 @@ void LightingCelShaded_float(
     {
         light = GetAdditionalLight(i, Position, 1);
         Color += CalculateCelShading(light, s);
-        Attenuation += AttenuationCalculation(light, s);
         
+        Attenuation += AttenuationCalculation(light, s);
+        float h = Attenuation * 0.5f + 0.5f;
+        DotValue = h;
 
     }
    
