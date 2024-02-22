@@ -71,7 +71,7 @@ void LightingCelShaded_float(
    
     
     Attenuation = light.distanceAttenuation * light.shadowAttenuation;
-    Attenuation *= diff;
+   // Attenuation *= diff;
     Color = diff;
    
     
