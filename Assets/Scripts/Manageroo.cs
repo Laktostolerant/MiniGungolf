@@ -15,13 +15,13 @@ public class Manageroo : MonoBehaviour
 
     int currentPlayerTurn;
 
-    [SerializeField] List<Player> players;
+    [SerializeField] List<ThePlayer> players;
 
     void Start()
     {
         foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player"))
         {
-            players.Add(player.GetComponent<Player>());
+            players.Add(player.GetComponent<ThePlayer>());
         }
     }
 

@@ -38,46 +38,46 @@ public class Sniper_Ability : WeaponAbility
         lineRenderer.positionCount = 0;
     }
 
-    public override void PassiveGunAbility(GameObject myBall)
-    {
-        PredictShot(myBall);
-    }
+    //public override void PassiveGunAbility(GameObject myBall)
+    //{
+    //    PredictShot(myBall);
+    //}
 
-    void PredictShot(GameObject myBall)
-    {
-        Ball ball = myBall.GetComponent<Ball>();
-        Vector3 origin = myBall.transform.position;
-        Vector3 direction = Player.Instance.GetGunDirection(true);
-        List<Vector3> hitPoints = new List<Vector3>();
-        float remainingDistance = 2;
+    //void PredictShot(GameObject myBall)
+    //{
+    //    Ball ball = myBall.GetComponent<Ball>();
+    //    Vector3 origin = myBall.transform.position;
+    //    Vector3 direction = ThePlayer.Instance.GetGunDirection(true);
+    //    List<Vector3> hitPoints = new List<Vector3>();
+    //    float remainingDistance = 2;
 
-        hitPoints.Add(origin);
+    //    hitPoints.Add(origin);
 
-        while (remainingDistance > 0)
-        {
-            if (hitPoints.Count > 2) break;
+    //    while (remainingDistance > 0)
+    //    {
+    //        if (hitPoints.Count > 2) break;
 
-            if (Physics.Raycast(origin, direction, out hit, remainingDistance, 1))
-            {
-                hitPoints.Add(hit.point);
-                direction = Vector3.Reflect(direction, hit.normal);
-                origin = hit.point;
-                remainingDistance -= hit.distance;
-            }
-            else
-            {
-                hitPoints.Add(origin + direction * remainingDistance);
-                break;
-            }
-        }
+    //        if (Physics.Raycast(origin, direction, out hit, remainingDistance, 1))
+    //        {
+    //            hitPoints.Add(hit.point);
+    //            direction = Vector3.Reflect(direction, hit.normal);
+    //            origin = hit.point;
+    //            remainingDistance -= hit.distance;
+    //        }
+    //        else
+    //        {
+    //            hitPoints.Add(origin + direction * remainingDistance);
+    //            break;
+    //        }
+    //    }
 
-        lineRenderer.positionCount = hitPoints.Count;
+    //    lineRenderer.positionCount = hitPoints.Count;
 
-        for (int i = 0; i < lineRenderer.positionCount; i++)
-        {
-            lineRenderer.SetPosition(i, hitPoints[i]);
-        }
-    }
+    //    for (int i = 0; i < lineRenderer.positionCount; i++)
+    //    {
+    //        lineRenderer.SetPosition(i, hitPoints[i]);
+    //    }
+    //}
 
     //public override void OnBallCollisionEnter(Collision collision)
     //{

@@ -7,9 +7,8 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Player : MonoBehaviour
+public class ThePlayer : MonoBehaviour
 {
-    public static Player Instance;
 
     [SerializeField] GameObject ballObject;
     [SerializeField] GameObject directionPointer;
@@ -22,7 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] Ball ball;
     GunManager gunManager;
 
-    private void Awake() { Instance = this; } //THIS SHOULD NOT BE AN INSTANCE UNLESS IT'S MY PLAYER. OTHERWISE MAYBE THERE IS ANOTHER SOLUTION IDK
+    //private void Awake() { Instance = this; } //THIS SHOULD NOT BE AN INSTANCE UNLESS IT'S MY PLAYER. OTHERWISE MAYBE THERE IS ANOTHER SOLUTION IDK
 
     void Start()
     {

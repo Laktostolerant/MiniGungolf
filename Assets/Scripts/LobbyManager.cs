@@ -81,18 +81,20 @@ public class LobbyManager : MonoBehaviour
 
     public void GoAuthenticate()
     {
-        Authenticate(EditPlayerName.Instance.GetPlayerName());
+        //ADD USERNAME GET
+        Authenticate("Player");
     }
 
     public async void Authenticate(string name)
     {
         InitializationOptions initializationOptions = new InitializationOptions();
-        initializationOptions.SetProfile(EditPlayerName.Instance.GetPlayerName());
+
+        //ADD USERNAME GET
+        initializationOptions.SetProfile("Player");
 
         await UnityServices.InitializeAsync(initializationOptions);
 
         AuthenticationService.Instance.SignedIn += () => {
-            Debug.Log("Signed in with ID: " + AuthenticationService.Instance.PlayerId + "\n and username: " + EditPlayerName.Instance.GetPlayerName());
         };
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
@@ -244,7 +246,7 @@ public class LobbyManager : MonoBehaviour
             {
                 Debug.Log("Starting the game.");
 
-                string relayCode = await RelayMaker.Instance.CreateRelay();
+                string relayCode = await RelayMaker.Instance.CreateServerRelay();
 
                 Lobby lobby = await Lobbies.Instance.UpdateLobbyAsync(joinedLobby.Id, new UpdateLobbyOptions
                 {

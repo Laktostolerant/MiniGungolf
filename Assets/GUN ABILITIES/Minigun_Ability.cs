@@ -20,7 +20,7 @@ public class Minigun_Ability : WeaponAbility
 
         for (int i = 0; i < 20; i++)
         {
-            ball.AddForceToBall(Player.Instance.GetGunDirection(true), 0.5f, false);
+            //ball.AddForceToBall(ThePlayer.Instance.GetGunDirection(true), 0.5f, false);
             yield return new WaitForSeconds(0.1f);
         }
 

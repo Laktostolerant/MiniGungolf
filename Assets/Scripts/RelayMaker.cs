@@ -10,19 +10,18 @@ using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
 using System.Threading.Tasks;
 using Unity.Services.Lobbies;
-//using UnityEditor.PackageManager;
 
 public class RelayMaker : MonoBehaviour
 {
     public static RelayMaker Instance { get; private set; }
     private void Awake() { Instance = this; }
- 
-    [ContextMenu("Create a Relay")]
-    public async Task<string> CreateRelay()
+
+    //FOR SINGLEPLAYER CAMPAIGN
+    public async Task<string> CreateLocalRelay()
     {
         try
         {
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(1);
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(0);
 
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
@@ -32,6 +31,32 @@ public class RelayMaker : MonoBehaviour
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartHost();
+
+            Debug.Log("Successfully created a lobby.");
+            return joinCode;
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.Log(e);
+            return null;
+        }
+    }
+
+    //IF NO SERVERS EXIST, MAKE ONE.
+    public async Task<string> CreateServerRelay()
+    {
+        try
+        {
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(7);
+
+            string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
+            Debug.Log("Join code: " + joinCode);
+
+            RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+            NetworkManager.Singleton.StartServer();
 
             return joinCode;
         }
@@ -72,5 +97,10 @@ public class RelayMaker : MonoBehaviour
         {
 
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        LeaveRelay();
     }
 }
