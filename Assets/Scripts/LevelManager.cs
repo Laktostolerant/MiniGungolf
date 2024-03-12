@@ -1,16 +1,26 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
-    private void Awake() { instance = this; }
+    private void Awake()
+    {
+        if (instance != null)
+            Destroy(gameObject);
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     [SerializeField] World[] worlds;
     [SerializeField] GameObject levelsParentGrid;
     [SerializeField] TextMeshProUGUI worldTitle;
+    [SerializeField] GameObject worldBackground;
+    [SerializeField] Image worldDecor;
     List<GameObject> currentlyDisplayedLevels = new List<GameObject>();
 
     [Header("Level Info Display")]
@@ -23,6 +33,10 @@ public class LevelManager : MonoBehaviour
 
     int currentLevelDisplayIndex;
 
+    public Vector2 selectedLevel;
+
+    public Vector2 GetCurrentLevel { get { return selectedLevel; } private set { selectedLevel = value; }
+}
     public void EnableLevelsMenu()
     {
         currentLevelDisplayIndex = 0;
@@ -63,7 +77,9 @@ public class LevelManager : MonoBehaviour
         currentlyDisplayedLevels.Clear();
 
         worldTitle.text = worlds[currentLevelDisplayIndex].worldName;
-        worldTitle.color = worlds[currentLevelDisplayIndex].worldColor;
+        worldTitle.color = worlds[currentLevelDisplayIndex].worldTitleColor;
+        worldBackground.GetComponent<Image>().color = worlds[currentLevelDisplayIndex].worldBackgroundColor;
+        worldDecor.sprite = worlds[currentLevelDisplayIndex].worldDecor;
 
         for (int i = 0; i < worlds[currentLevelDisplayIndex].levels.Length; i++)
         {
@@ -78,6 +94,9 @@ public class LevelManager : MonoBehaviour
     //The level viewer's data is set to the clicked level.
     public void OnLevelDisplay(GameLevel levelData)
     {
+        //This is for if you want to load a level, it knows which level to load.
+        selectedLevel = new Vector2(currentLevelDisplayIndex, levelData.levelIndex);
+
         levelInfoDisplay.SetActive(true);
         levelIndexDisplay.text = "Level " + levelData.levelIndex.ToString();
         levelHighscoreDisplay.text = "HIGHSCORE: " + levelData.highScore.ToString();
@@ -85,5 +104,12 @@ public class LevelManager : MonoBehaviour
         bronzeReqDisplay.text = levelData.medalBronzeRequirement.ToString();
         silverReqDisplay.text = levelData.medalSilverRequirement.ToString();
         goldReqDisplay.text = levelData.medalGoldRequirement.ToString();
+    }
+
+    //Idk if this will be needed?
+    //Just returns a specific level
+    public GameLevel GetIndexedLevel(Vector2 index)
+    {
+        return worlds[(int)index.x].levels[(int)index.y];
     }
 }

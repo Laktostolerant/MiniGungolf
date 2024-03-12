@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /*
  * 
@@ -13,13 +14,16 @@ using UnityEngine;
 [System.Serializable]
 public class World
 {
-    public Color worldColor;
+    public Color worldTitleColor;
+    public Color worldBackgroundColor;
+    public Sprite worldDecor;
     public string worldName;
     public GameLevel[] levels;
 
-    public World(Color color, string name, GameLevel[] levels)
+    public World(Color titlecolor, Color backgroundcolor, string name, GameLevel[] levels)
     {
-        this.worldColor = color;
+        this.worldTitleColor = titlecolor;
+        this.worldBackgroundColor = backgroundcolor;
         this.worldName = name;
         this.levels = levels;
     }

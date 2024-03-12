@@ -16,6 +16,8 @@ public class GameLevel : MonoBehaviour
 
     public int levelIndex;
 
+    [SerializeField] Transform spawnLocation;
+
 
     public GameLevel(GameObject level, int bronze, int silver, int gold, int highscore)
     {
