@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
-    public static LevelManager instance;
+    public static LevelManager Instance;
 
     private void Awake()
     {
-        if (instance != null)
+        if (Instance != null)
             Destroy(gameObject);
 
-        instance = this;
+        Instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
@@ -95,10 +95,10 @@ public class LevelManager : MonoBehaviour
     public void OnLevelDisplay(GameLevel levelData)
     {
         //This is for if you want to load a level, it knows which level to load.
-        selectedLevel = new Vector2(currentLevelDisplayIndex, levelData.levelIndex);
+        selectedLevel = new Vector2(currentLevelDisplayIndex, levelData.worldLevelIndex);
 
         levelInfoDisplay.SetActive(true);
-        levelIndexDisplay.text = "Level " + levelData.levelIndex.ToString();
+        levelIndexDisplay.text = "Level " + levelData.worldLevelIndex.ToString();
         levelHighscoreDisplay.text = "HIGHSCORE: " + levelData.highScore.ToString();
 
         bronzeReqDisplay.text = levelData.medalBronzeRequirement.ToString();
@@ -111,5 +111,10 @@ public class LevelManager : MonoBehaviour
     public GameLevel GetIndexedLevel(Vector2 index)
     {
         return worlds[(int)index.x].levels[(int)index.y];
+    }
+
+    public void OnPlayButton()
+    {
+        LevelLoader.Instance.LoadSingleplayerLevel(selectedLevel);
     }
 }

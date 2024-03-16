@@ -10,6 +10,9 @@ public class ActiveLevelData : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI shotCountText;
 
+    public static ActiveLevelData Instance;
+    private void Awake() { Instance = this; }
+
     //Just a placeholder way of increasing the shot count.
     //Replace with real stuff
     void Update()
@@ -19,5 +22,13 @@ public class ActiveLevelData : MonoBehaviour
             shotCount++;
             shotCountText.text = shotCount.ToString();
         }
+    }
+
+    //This is a method that will be called when ball enters hole.
+    //Needs a separation for multiplayer & singleplayer somehow?
+    //Unsure so far how we should do it.
+    public void BallEnteredHole()
+    {
+
     }
 }
