@@ -7,14 +7,7 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
 
-    private void Awake()
-    {
-        if (Instance != null)
-            Destroy(gameObject);
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
+    private void Awake() { Instance = this; }
 
     [SerializeField] World[] worlds;
     [SerializeField] GameObject levelsParentGrid;
@@ -113,6 +106,25 @@ public class LevelManager : MonoBehaviour
         return worlds[(int)index.x].levels[(int)index.y];
     }
 
+    public List<GameLevel> GrabLevels(int count)
+    {
+        List<GameLevel> tempList = new List<GameLevel>();
+
+
+
+
+        return tempList;
+    }
+
+    //Just a simple "grab random level" thing.
+    public GameLevel GetRandomLevel()
+    {
+        GameLevel temp;
+        int randomWorld = Random.Range(0, worlds.Length);
+        temp = worlds[randomWorld].levels[Random.Range(0, worlds[randomWorld].levels.Length)];
+
+        return temp;
+    }
     public void OnPlayButton()
     {
         LevelLoader.Instance.LoadSingleplayerLevel(selectedLevel);

@@ -1,12 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelLoader : MonoBehaviour
+public class LevelLoader : NetworkBehaviour
 {
-    public static LevelLoader Instance; 
-    private void Awake() { Instance = this; }
+    public static LevelLoader Instance;
+    private void Awake()
+    {
+        if (Instance != null)
+            Destroy(gameObject);
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    GameLevel selectedSingleplayerLevel;
+    Vector2 selectedSingleplayerIndex;
 
     int levelsLeftToLoad;
 
@@ -23,19 +35,50 @@ public class LevelLoader : MonoBehaviour
         LoadSingleplayerLevel(new Vector2(0, 0));
     }
 
+    //Goes into the play scene & loads the select level
     public void LoadSingleplayerLevel(Vector2 index)
     {
-        SceneManager.LoadScene(2);
-        Debug.Log("index: " + index + " with prefab: " + LevelManager.Instance.GetIndexedLevel(index).levelPrefab);
-        GameObject temp = Instantiate(LevelManager.Instance.GetIndexedLevel(index).levelPrefab, transform);
-        Debug.Log(temp);
+        GameLevel level = LevelManager.Instance.GetIndexedLevel(index);
 
-        Instantiate(new GameObject(), transform);
+        SceneManager.LoadScene(2);
+        GameObject temp = Instantiate(level.levelPrefab, transform);
+        Debug.Log(temp);
     }
 
-    public void UpdateLevelHighscore(Vector2 index)
+    //Work in progress once multiplayer is properly implemented.
+    [ContextMenu("SELECT LEVELS LOL")]
+    public void SpawnMultiplayerLevels()
     {
-        //LevelManager.instance.GetIndexedLevel(index).UpdateHighscore
+        List<GameLevel> gameLevels = new List<GameLevel>();
+
+        while (gameLevels.Count < 5)
+        {
+            GameLevel tentativeLevel = LevelManager.Instance.GetRandomLevel();
+            bool levelAlreadyAdded = false;
+
+            foreach(GameLevel level in gameLevels)
+            {
+                if (tentativeLevel == level)
+                {
+                    levelAlreadyAdded = true;
+                    break;
+                }
+            }
+
+            if (!levelAlreadyAdded)
+            {
+                Debug.Log("added a level");
+                gameLevels.Add(tentativeLevel);
+            }
+        }
+
+        Debug.Log("levels: " + gameLevels[0] + " " + gameLevels[1] + " " + gameLevels[2] + " " + gameLevels[3] + " " + gameLevels[4]);
+    }
+
+    //When back in the main menu, update the singleplayer level's highscore.
+    public void UpdateLevelHighscore()
+    {
+        LevelManager.Instance.GetIndexedLevel(selectedSingleplayerIndex).UpdateHighscore(1);
     }
 
 }

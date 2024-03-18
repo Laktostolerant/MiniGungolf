@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class GameLevel : MonoBehaviour
 {
+    public Vector3 spawnPoint;
+
     public GameObject levelPrefab;
     public int medalBronzeRequirement;
     public int medalSilverRequirement;
