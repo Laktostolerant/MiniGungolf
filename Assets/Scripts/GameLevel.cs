@@ -34,7 +34,7 @@ public class GameLevel : MonoBehaviour
     //This is the method that is called when pressing a level button in the menu.
     public void EnableLevelDisplay()
     {
-        LevelManager.Instance.OnLevelDisplay(this);
+        CampaignManager.Instance.OnLevelDisplay(this);
     }
 
     //Set this level's highscore to the next best if it's better.
