@@ -10,11 +10,7 @@ public class LevelLoader : NetworkBehaviour
     public static LevelLoader Instance;
     private void Awake()
     {
-        if (Instance != null)
-            Destroy(gameObject);
-
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     GameLevel selectedSingleplayerLevel;
@@ -38,11 +34,10 @@ public class LevelLoader : NetworkBehaviour
     //Goes into the play scene & loads the select level
     public void LoadSingleplayerLevel(Vector2 index)
     {
-        GameLevel level = LevelManager.Instance.GetIndexedLevel(index);
+        GameLevel level = LevelStorage.Instance.GetIndexedLevel(index);
 
         SceneManager.LoadScene(2);
         GameObject temp = Instantiate(level.levelPrefab, transform);
-        Debug.Log(temp);
     }
 
     //Work in progress once multiplayer is properly implemented.
@@ -53,7 +48,7 @@ public class LevelLoader : NetworkBehaviour
 
         while (gameLevels.Count < 5)
         {
-            GameLevel tentativeLevel = LevelManager.Instance.GetRandomLevel();
+            GameLevel tentativeLevel = LevelStorage.Instance.GetRandomLevel();
             bool levelAlreadyAdded = false;
 
             foreach(GameLevel level in gameLevels)
@@ -78,7 +73,7 @@ public class LevelLoader : NetworkBehaviour
     //When back in the main menu, update the singleplayer level's highscore.
     public void UpdateLevelHighscore()
     {
-        LevelManager.Instance.GetIndexedLevel(selectedSingleplayerIndex).UpdateHighscore(1);
+        LevelStorage.Instance.GetIndexedLevel(selectedSingleplayerIndex).UpdateHighscore(1);
     }
 
 }
