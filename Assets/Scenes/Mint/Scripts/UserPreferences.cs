@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class UserPreferences : MonoBehaviour
 {
-    public static ??? UniversalButton;
+    //public static ??? UniversalButton;
 }
