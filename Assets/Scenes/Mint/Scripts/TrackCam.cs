@@ -8,6 +8,6 @@ public class TrackCam : MonoBehaviour
 
     void Update()
     {
-        Target.LookAt(Target.position);
+        transform.LookAt(Target.position);
     }
 }

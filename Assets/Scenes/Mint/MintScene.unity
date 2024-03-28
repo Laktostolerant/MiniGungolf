@@ -313,6 +313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Pivot: {fileID: 933570482}
+  Ball: {fileID: 2007081637}
   Pointer: {fileID: 1189489284}
 --- !u!1 &933570481
 GameObject:
@@ -706,13 +707,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1515746343}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1072185, y: 0, z: 0, w: 0.99423546}
-  m_LocalPosition: {x: -0.017, y: 0.929, z: -2.928}
+  m_LocalRotation: {x: 0.35355338, y: 0.35355338, z: -0.1464466, w: 0.8535535}
+  m_LocalPosition: {x: -6.51, y: 6.29, z: -2.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 12.31, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 45, z: 0}
 --- !u!114 &1515746347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -998,6 +999,7 @@ GameObject:
   - component: {fileID: 2007081636}
   - component: {fileID: 2007081635}
   - component: {fileID: 2007081634}
+  - component: {fileID: 2007081638}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -1091,6 +1093,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 886807613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &2007081638
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007081633}
+  serializedVersion: 4
+  m_Mass: 0.05
+  m_Drag: 0.1
+  m_AngularDrag: 0.1
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!23 &6101375858142626
 MeshRenderer:
   m_ObjectHideFlags: 0
